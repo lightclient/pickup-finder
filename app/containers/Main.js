@@ -8,11 +8,8 @@ import MapView from 'react-native-maps';
 import { globalActionCreators } from '../redux/global'
 
 import {
-  LocationButtonGroup,
-  LocationSearchHeader,
-  LocationSearchResults,
-  SearchResultsList,
   NavigationIcon,
+  LocationButtonGroup
 } from '../components'
 
 const mapStateToProps = (state) => ({
@@ -48,15 +45,6 @@ class Main extends Component {
       <View
         style={styles.main}
       >
-        <LocationSearchHeader
-          searchIsOpen={this.props.searchIsOpen}
-          openSearch={this.props.openSearch}
-          closeSearch={this.props.closeSearch}
-          destination={this.props.destination}
-          source={this.props.source}
-          setDestination={this.props.setDestination}
-          setSource={this.props.setSource}
-        />
         <MapView
           style={style}
           initialRegion={{
@@ -66,13 +54,6 @@ class Main extends Component {
             longitudeDelta: 0.0421,
           }}
         />
-        <LocationSearchResults visible={this.props.searchIsOpen}>
-          <SearchResultsList
-            recentLocations={recentLocations}
-            setDestination={this.props.setDestination}
-            setSource={this.props.setSource}
-          />
-        </LocationSearchResults>
         <TouchableOpacity
           style={styles.controlButton}
           onPress={this._closeSearch}
