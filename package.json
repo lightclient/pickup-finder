@@ -8,9 +8,11 @@
   },
   "dependencies": {
     "@shoutem/ui": "0.10.2",
+    "firebase": "^4.0.0",
     "lodash": "^4.17.1",
     "react": "~15.3.1",
     "react-native": "0.37.0",
+    "react-native-action-button": "^2.6.9",
     "react-native-animatable": "^0.6.1",
     "react-native-maps": "0.12.4",
     "react-native-router-flux": "^3.37.0",

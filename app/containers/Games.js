@@ -1,22 +1,16 @@
-import React, { Component, PropTypes } from 'react'
+import React, { Component } from 'react'
 import { TouchableOpacity, Dimensions, StyleSheet, View, Image } from 'react-native'
 import dismissKeyboard from 'react-native/Libraries/Utilities/dismissKeyboard'
-
-import { connect } from 'react-redux'
+import ActionButton from 'react-native-action-button';
+import Icon from 'react-native-vector-icons/Ionicons';
+import { Actions } from 'react-native-router-flux';
 import MapView from 'react-native-maps';
 
-import { globalActionCreators } from '../redux/global'
+import { bindActionCreators } from 'redux'
+import { connect } from 'react-redux'
+import * as GamesActions from '../actions/games'
 
-import {
-  NavigationIcon,
-  LocationButtonGroup
-} from '../components'
-
-const mapStateToProps = (state) => ({
-  source: state.global.source,
-})
-
-class Main extends Component {
+class Games extends Component {
   constructor(props) {
     super(props)
     this.state = {
@@ -85,6 +79,11 @@ class Main extends Component {
             />
           ))}
         </MapView>
+        <ActionButton buttonColor="rgba(231,76,60,1)">
+          <ActionButton.Item buttonColor='#9b59b6' title="New Game" onPress={Actions.newGame}>
+            <Icon name="md-create" style={styles.actionButtonIcon} />
+          </ActionButton.Item>
+        </ActionButton>
       </View>
     )
     }
@@ -98,6 +97,11 @@ const styles = StyleSheet.create({
   main: {
     top: 20,
   },
+  actionButtonIcon: {
+    fontSize: 20,
+    height: 22,
+    color: 'white',
+  },
   controlButton: {
     position: 'absolute',
     height: 20,
@@ -108,4 +112,14 @@ const styles = StyleSheet.create({
   }
 })
 
-export default connect(mapStateToProps, globalActionCreators)(Main)
+function mapStateToProps(state) {
+  return {
+    games: state.games.games,
+  }
+}
+
+function mapDispatchToProps(dispatch) {
+  return bindActionCreators(GamesActions, dispatch)
+}
+
+export default connect(mapStateToProps, mapDispatchToProps)(Games)

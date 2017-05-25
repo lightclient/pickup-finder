@@ -1,29 +1,23 @@
 import { createStore, applyMiddleware } from 'redux'
 
-import reducer from '../redux/index.js'
-
 import thunk from 'redux-thunk'
 
-import createLogger from 'redux-logger'
+import reducer from '../reducers'
 
-const middleware = [ thunk ]
+import { syncFirebase } from '../firebase'
 
-// Use the NODE_ENV to include logging and debugging tools
-// in development environment. They will be compiled out of
-// the production build.
-if (process.env.NODE_ENV === 'development') {
-  middleware.push(createLogger())
-  // Turns on Reactotron debugging tool
-  require('../config/ReactotronConfig')
-}
-
-export default (initialState) => {
+export default function configureStore(initialState) {
   const store = createStore(
     reducer,
-    initialState,
-    applyMiddleware(...middleware),
-    // autoRehydrate()
+    applyMiddleware(thunk)
   )
-  // persistStore(store)
+  syncFirebase(store);
+  if (module.hot) {
+    module.hot.accept(() => {
+      const nextRootReducer = require('../reducers/index').default;
+      store.replaceReducer(nextRootReducer);
+    });
+  }
+
   return store
 }

@@ -1,7 +1,6 @@
 import { combineReducers } from 'redux'
-
-import global from './global.js'
+import games from './games'
 
 export default combineReducers({
-  global,
+  games
 })
