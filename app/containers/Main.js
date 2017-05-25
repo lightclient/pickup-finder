@@ -13,70 +13,83 @@ import {
 } from '../components'
 
 const mapStateToProps = (state) => ({
-  recentLocations: state.global.recentLocations,
-  shortcutLocations: state.global.recentLocations.slice(0, 3),
-  searchIsOpen: state.global.searchIsOpen,
-  destination: state.global.destination,
   source: state.global.source,
 })
 
 class Main extends Component {
   constructor(props) {
     super(props)
-    this._closeSearch = this._closeSearch.bind(this)
+    this.state = {
+      initialPosition: 'unknown',
+      lastPosition: 'unknown',
+      markers: [
+        { latlng: 
+          { 
+            latitude: 34.076222, 
+            longitude: -118.444465
+          }
+        }
+      ]
+    };
   }
 
-  _closeSearch() {
-    this.props.closeSearch()
-    dismissKeyboard()
+  watchID: ?number = null;
+
+  componentDidMount() {
+    navigator.geolocation.getCurrentPosition(
+      (position) => {
+        this.setState({initialPosition:position});
+      },
+      (error) => alert(JSON.stringify(error)),
+      {enableHighAccuracy: true, timeout: 20000, maximumAge: 1000}
+    );
+    this.watchID = navigator.geolocation.watchPosition((position) => {
+      this.setState({lastPosition:position});
+    });
+  }
+
+  componentWillUnmount() {
+    navigator.geolocation.clearWatch(this.watchID);
   }
 
   render() {
-    const {recentLocations, shortcutLocations} = this.props
-
+    const initialPosition = this.state.initialPosition;
+    const lastPosition = this.state.lastPosition;
     const {width: windowWidth, height: windowHeight} = Dimensions.get('window')
     const style = {
       height: windowHeight,
       width: windowWidth,
       zIndex: 0,
     }
-
-    return (
+    if (initialPosition!='unknown') {
+      let position = initialPosition
+      if (lastPosition!='unknown')
+        position = lastPosition
+      console.log(position)
+      return (
       <View
         style={styles.main}
       >
         <MapView
           style={style}
           initialRegion={{
-            latitude: 37.78825,
-            longitude: -122.4324,
+            latitude: position.coords.latitude,
+            longitude: position.coords.longitude,
             latitudeDelta: 0.0922,
             longitudeDelta: 0.0421,
           }}
-        />
-        <TouchableOpacity
-          style={styles.controlButton}
-          onPress={this._closeSearch}
         >
-          { this.props.searchIsOpen ?
-            <Image
-              style={styles.controlButton}
-              source={require('../images/icon-arrow-left.png')}
+          {this.state.markers.map(marker => (
+            <MapView.Marker
+              coordinate={marker.latlng}
             />
-            :
-            <Image
-              style={styles.controlButton}
-              source={require('../images/icon-hamburger.png')}
-            /> 
-          }
-        </TouchableOpacity>
-        <LocationButtonGroup
-          visible={!this.props.searchIsOpen}
-          locations={recentLocations.slice(0,3)}
-          onPressLocation={this.props.setDestination}
-          openSearch={this.props.openSearch}
-        />
+          ))}
+        </MapView>
       </View>
+    )
+    }
+    return (
+      <View></View>
     )
   }
 }

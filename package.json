@@ -12,7 +12,7 @@
     "react": "~15.3.1",
     "react-native": "0.37.0",
     "react-native-animatable": "^0.6.1",
-    "react-native-maps": "0.12.2",
+    "react-native-maps": "0.12.4",
     "react-native-router-flux": "^3.37.0",
     "react-redux": "^4.4.6",
     "redux": "^3.6.0",
@@ -26,7 +26,6 @@
     "jest": "17.0.2",
     "jest-react-native": "17.0.2",
     "react-test-renderer": "~15.3.1",
-    "reactotron-react-native": "^1.5.0",
     "redux-logger": "^2.7.4"
   },
   "jest": {
